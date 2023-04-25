@@ -1,0 +1,20 @@
+{
+  "name": "learn2",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ts-morph": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.12"
+  }
+}

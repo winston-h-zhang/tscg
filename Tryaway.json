@@ -1,0 +1,4909 @@
+{
+  "nodes": [
+    {
+      "id": 0,
+      "class": "Object",
+      "location": "Tryaway/config/firebase.ts:16",
+      "raw_source": "firebase = admin.initializeApp({\n  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)\n})",
+      "incoming": [],
+      "outgoing": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "node_data": {
+        "name": "firebase"
+      }
+    },
+    {
+      "id": 1,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:4",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        0,
+        19,
+        25,
+        71,
+        86,
+        105,
+        151
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 2,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:10",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        1,
+        50,
+        56,
+        122,
+        136,
+        205
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 3,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:15",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        2,
+        169,
+        198
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 4,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:21",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        3,
+        176
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 5,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:26",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        4,
+        183
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 6,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:47",
+      "raw_source": "firebase.auth()",
+      "incoming": [
+        5,
+        229
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 7,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:41",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        6
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 8,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:42",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        7
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 9,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:89",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        8,
+        13
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 10,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:90",
+      "raw_source": "firebase.firestore()",
+      "incoming": [
+        9,
+        16
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 11,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:101",
+      "raw_source": "firebase.auth()",
+      "incoming": [
+        10,
+        41
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 12,
+      "class": "Object",
+      "location": "Tryaway/config/stripe.ts:5",
+      "raw_source": "stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {\n  apiVersion: null,\n  appInfo: {\n    // For sample support and debugging, not required for production:\n    name: 'nikp29/Tryaway',\n    version: '0.0.1',\n    url: 'https://github.com/nikp29/Tryaway'\n  }\n})",
+      "incoming": [],
+      "outgoing": [],
+      "node_data": {
+        "name": "stripe"
+      }
+    },
+    {
+      "id": 13,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:86",
+      "raw_source": "deactivateUser = async (req: IAuthorizedRouteReq, res: Response) => {\n  // cancels subscription for and wipes user data from stripe and firestore\n  const { authId } = req;\n  const usersRef = firebase.firestore().collection('users');\n  const stripeRef = firebase.firestore().collection('stripe');\n\n  try {\n    const data = await getUser(authId);\n    const { stripeCustId, stripeSubscriptonId } = data;\n    const deletedSubscription = await stripe.subscriptions.del(\n      stripeSubscriptonId\n    );\n\n    await stripeRef.doc(stripeCustId).delete();\n    await usersRef.doc(authId).delete();\n    firebase.auth().deleteUser(authId);\n\n    res.send({ deletedSubscription });\n  } catch (error) {\n    res.status(400).json({\n      error\n    });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        12,
+        13,
+        15,
+        16,
+        30,
+        32,
+        33,
+        35,
+        36,
+        38,
+        40,
+        41,
+        43,
+        45,
+        47
+      ],
+      "node_data": {
+        "name": "deactivateUser"
+      }
+    },
+    {
+      "id": 14,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:89",
+      "raw_source": "firebase.firestore().collection('users')",
+      "incoming": [
+        12
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:89",
+      "raw_source": "'users'",
+      "incoming": [
+        11
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 16,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:90",
+      "raw_source": "firebase.firestore().collection('stripe')",
+      "incoming": [
+        15
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:90",
+      "raw_source": "'stripe'",
+      "incoming": [
+        14
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 18,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:93",
+      "raw_source": "getUser(authId)",
+      "incoming": [
+        30
+      ],
+      "outgoing": [
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "node_data": {
+        "args": [
+          29
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "class": "Function",
+      "location": "Tryaway/helpers/firebase.ts:3",
+      "raw_source": "getUser = async (uuid: string) => {\n  const usersRef = firebase.firestore().collection('users');\n  const user = await usersRef.doc(uuid).get();\n  return user.data();\n}",
+      "incoming": [],
+      "outgoing": [
+        18,
+        19,
+        20,
+        22,
+        23
+      ],
+      "node_data": {
+        "name": "getUser"
+      }
+    },
+    {
+      "id": 20,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:4",
+      "raw_source": "firebase.firestore().collection('users')",
+      "incoming": [
+        18,
+        24,
+        70,
+        85,
+        104,
+        150
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          17
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:4",
+      "raw_source": "'users'",
+      "incoming": [
+        17
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 22,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:5",
+      "raw_source": "usersRef.doc(uuid).get()",
+      "incoming": [
+        20,
+        26,
+        72,
+        87,
+        106,
+        152
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 23,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:5",
+      "raw_source": "usersRef.doc(uuid)",
+      "incoming": [
+        22,
+        27,
+        73,
+        88,
+        107,
+        153
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          21
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:5",
+      "raw_source": "uuid",
+      "incoming": [
+        21
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 25,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:6",
+      "raw_source": "user.data()",
+      "incoming": [
+        23,
+        28,
+        74,
+        89,
+        108,
+        154
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 26,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:93",
+      "raw_source": "authId",
+      "incoming": [
+        29
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 27,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:95",
+      "raw_source": "stripe.subscriptions.del(\n      stripeSubscriptonId\n    )",
+      "incoming": [
+        32
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          31
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:96",
+      "raw_source": "stripeSubscriptonId",
+      "incoming": [
+        31
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 29,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:99",
+      "raw_source": "stripeRef.doc(stripeCustId).delete()",
+      "incoming": [
+        33
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 30,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:99",
+      "raw_source": "stripeRef.doc(stripeCustId)",
+      "incoming": [
+        35
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          34
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:99",
+      "raw_source": "stripeCustId",
+      "incoming": [
+        34
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 32,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:100",
+      "raw_source": "usersRef.doc(authId).delete()",
+      "incoming": [
+        36
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 33,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:100",
+      "raw_source": "usersRef.doc(authId)",
+      "incoming": [
+        38
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          37
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:100",
+      "raw_source": "authId",
+      "incoming": [
+        37
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 35,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:101",
+      "raw_source": "firebase.auth().deleteUser(authId)",
+      "incoming": [
+        40
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          39
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:101",
+      "raw_source": "authId",
+      "incoming": [
+        39
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 37,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:103",
+      "raw_source": "res.send({ deletedSubscription })",
+      "incoming": [
+        43
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          42
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:103",
+      "raw_source": "{ deletedSubscription }",
+      "incoming": [
+        42
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 39,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:105",
+      "raw_source": "res.status(400).json({\n      error\n    })",
+      "incoming": [
+        45
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          44
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:105",
+      "raw_source": "{\n      error\n    }",
+      "incoming": [
+        44
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 41,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:105",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        47
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          46
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:105",
+      "raw_source": "400",
+      "incoming": [
+        46
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 43,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:111",
+      "raw_source": "setAddress = async (req: IAuthorizedRouteReq, res: Response) => {\n  // sets address for user in firestore\n  const { authId } = req;\n  const { address } = req.body;\n\n  try {\n    await updateUser(authId, { address });\n    res.send({ address });\n  } catch (error) {\n    console.log(error);\n    res.status(400).json({\n      error\n    });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        61,
+        63,
+        65,
+        67,
+        69
+      ],
+      "node_data": {
+        "name": "setAddress"
+      }
+    },
+    {
+      "id": 44,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:117",
+      "raw_source": "updateUser(authId, { address })",
+      "incoming": [
+        61
+      ],
+      "outgoing": [
+        55,
+        56,
+        57,
+        58
+      ],
+      "node_data": {
+        "args": [
+          59,
+          60
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "class": "Function",
+      "location": "Tryaway/helpers/firebase.ts:9",
+      "raw_source": "updateUser = async (uuid: string, data: any) => {\n  const usersRef = firebase.firestore().collection('users');\n  await usersRef.doc(uuid).update(data);\n}",
+      "incoming": [],
+      "outgoing": [
+        49,
+        50,
+        52,
+        54
+      ],
+      "node_data": {
+        "name": "updateUser"
+      }
+    },
+    {
+      "id": 46,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:10",
+      "raw_source": "firebase.firestore().collection('users')",
+      "incoming": [
+        49,
+        55,
+        121,
+        135,
+        204
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          48
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:10",
+      "raw_source": "'users'",
+      "incoming": [
+        48
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 48,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:11",
+      "raw_source": "usersRef.doc(uuid).update(data)",
+      "incoming": [
+        52,
+        57,
+        123,
+        137,
+        206
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          51
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:11",
+      "raw_source": "data",
+      "incoming": [
+        51
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 50,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:11",
+      "raw_source": "usersRef.doc(uuid)",
+      "incoming": [
+        54,
+        58,
+        124,
+        138,
+        207
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          53
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:11",
+      "raw_source": "uuid",
+      "incoming": [
+        53
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 52,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:117",
+      "raw_source": "authId",
+      "incoming": [
+        59
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 53,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:117",
+      "raw_source": "{ address }",
+      "incoming": [
+        60
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 54,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:118",
+      "raw_source": "res.send({ address })",
+      "incoming": [
+        63
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          62
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:118",
+      "raw_source": "{ address }",
+      "incoming": [
+        62
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 56,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:120",
+      "raw_source": "console.log(error)",
+      "incoming": [
+        65
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          64
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:120",
+      "raw_source": "error",
+      "incoming": [
+        64
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 58,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:121",
+      "raw_source": "res.status(400).json({\n      error\n    })",
+      "incoming": [
+        67
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          66
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:121",
+      "raw_source": "{\n      error\n    }",
+      "incoming": [
+        66
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 60,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:121",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        69
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          68
+        ]
+      }
+    },
+    {
+      "id": 61,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:121",
+      "raw_source": "400",
+      "incoming": [
+        68
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 62,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:127",
+      "raw_source": "paymentMethodID = async (req: IAuthorizedRouteReq, res: Response) => {\n  // sets card for user in stripe\n  const { authId } = req;\n\n  try {\n    const user = await getUser(authId);\n    const intent = await stripe.setupIntents.create({\n      customer: user.StripeCustId\n    });\n    res.send({ clientSecret: intent.client_secret });\n  } catch (error) {\n    res.status(400).json({\n      error\n    });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        76,
+        78,
+        80,
+        82,
+        84
+      ],
+      "node_data": {
+        "name": "paymentMethodID"
+      }
+    },
+    {
+      "id": 63,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:132",
+      "raw_source": "getUser(authId)",
+      "incoming": [
+        76
+      ],
+      "outgoing": [
+        70,
+        71,
+        72,
+        73,
+        74
+      ],
+      "node_data": {
+        "args": [
+          75
+        ]
+      }
+    },
+    {
+      "id": 64,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:132",
+      "raw_source": "authId",
+      "incoming": [
+        75
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 65,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:133",
+      "raw_source": "stripe.setupIntents.create({\n      customer: user.StripeCustId\n    })",
+      "incoming": [
+        78
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          77
+        ]
+      }
+    },
+    {
+      "id": 66,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:133",
+      "raw_source": "{\n      customer: user.StripeCustId\n    }",
+      "incoming": [
+        77
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 67,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:136",
+      "raw_source": "res.send({ clientSecret: intent.client_secret })",
+      "incoming": [
+        80
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          79
+        ]
+      }
+    },
+    {
+      "id": 68,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:136",
+      "raw_source": "{ clientSecret: intent.client_secret }",
+      "incoming": [
+        79
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 69,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:138",
+      "raw_source": "res.status(400).json({\n      error\n    })",
+      "incoming": [
+        82
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          81
+        ]
+      }
+    },
+    {
+      "id": 70,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:138",
+      "raw_source": "{\n      error\n    }",
+      "incoming": [
+        81
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 71,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:138",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        84
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          83
+        ]
+      }
+    },
+    {
+      "id": 72,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:138",
+      "raw_source": "400",
+      "incoming": [
+        83
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 73,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:144",
+      "raw_source": "updateSubscription = async (req: IAuthorizedRouteReq, res: Response) => {\n  const { authId } = req;\n\n  try {\n    const data = await getUser(authId);\n    const subscription = await stripe.subscriptions.retrieve(\n      data.stripeSubscriptonId\n    );\n    const updatedSubscription = await stripe.subscriptions.retrieve(\n      data.stripeSubscriptonId\n    );\n\n    const invoice = subscription.latest_invoice as Stripe.Invoice;\n    const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;\n\n    res.send({\n      subscriptionId: updatedSubscription.id,\n      clientSecret: paymentIntent.client_secret\n    });\n  } catch (error) {\n    console.log(error);\n    res.status(400).send({ error });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        91,
+        93,
+        95,
+        97,
+        99,
+        101,
+        103
+      ],
+      "node_data": {
+        "name": "updateSubscription"
+      }
+    },
+    {
+      "id": 74,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:148",
+      "raw_source": "getUser(authId)",
+      "incoming": [
+        91
+      ],
+      "outgoing": [
+        85,
+        86,
+        87,
+        88,
+        89
+      ],
+      "node_data": {
+        "args": [
+          90
+        ]
+      }
+    },
+    {
+      "id": 75,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:148",
+      "raw_source": "authId",
+      "incoming": [
+        90
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 76,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:149",
+      "raw_source": "stripe.subscriptions.retrieve(\n      data.stripeSubscriptonId\n    )",
+      "incoming": [
+        93
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          92
+        ]
+      }
+    },
+    {
+      "id": 77,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:150",
+      "raw_source": "data.stripeSubscriptonId",
+      "incoming": [
+        92
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 78,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:152",
+      "raw_source": "stripe.subscriptions.retrieve(\n      data.stripeSubscriptonId\n    )",
+      "incoming": [
+        95
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          94
+        ]
+      }
+    },
+    {
+      "id": 79,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:153",
+      "raw_source": "data.stripeSubscriptonId",
+      "incoming": [
+        94
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 80,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:159",
+      "raw_source": "res.send({\n      subscriptionId: updatedSubscription.id,\n      clientSecret: paymentIntent.client_secret\n    })",
+      "incoming": [
+        97
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          96
+        ]
+      }
+    },
+    {
+      "id": 81,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:159",
+      "raw_source": "{\n      subscriptionId: updatedSubscription.id,\n      clientSecret: paymentIntent.client_secret\n    }",
+      "incoming": [
+        96
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 82,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:164",
+      "raw_source": "console.log(error)",
+      "incoming": [
+        99
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 83,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:164",
+      "raw_source": "error",
+      "incoming": [
+        98
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 84,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:165",
+      "raw_source": "res.status(400).send({ error })",
+      "incoming": [
+        101
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          100
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:165",
+      "raw_source": "{ error }",
+      "incoming": [
+        100
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 86,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:165",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        103
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          102
+        ]
+      }
+    },
+    {
+      "id": 87,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:165",
+      "raw_source": "400",
+      "incoming": [
+        102
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 88,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:187",
+      "raw_source": "activateAccount = async (req: IAuthorizedRouteReq, res: Response) => {\n  const { authId } = req;\n\n  try {\n    const user = await getUser(authId);\n    if (user.expiration <= moment().unix()) {\n      res.status(400).send({ error: 'expired' });\n      return;\n    }\n\n    const domain = psl.get(domainFromUrl(req.body.url));\n    if (user.mailslurp_id === '') {\n      await createInbox(authId, user.email);\n    }\n    user.card_usage.push(domain);\n    updateUser(authId, { card_usage: user.card_usage });\n\n    res.send({ email: user.proxy_email, card_token: user.card_token });\n  } catch (error) {\n    console.log(error);\n    res.status(400).send({ error });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        110,
+        111,
+        112,
+        114,
+        116,
+        118,
+        119,
+        132,
+        134,
+        141,
+        143,
+        145,
+        147,
+        149
+      ],
+      "node_data": {
+        "name": "activateAccount"
+      }
+    },
+    {
+      "id": 89,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:191",
+      "raw_source": "getUser(authId)",
+      "incoming": [
+        110
+      ],
+      "outgoing": [
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "node_data": {
+        "args": [
+          109
+        ]
+      }
+    },
+    {
+      "id": 90,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:191",
+      "raw_source": "authId",
+      "incoming": [
+        109
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 91,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:192",
+      "raw_source": "moment().unix()",
+      "incoming": [
+        111
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 92,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:192",
+      "raw_source": "moment()",
+      "incoming": [
+        112
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 93,
+      "class": "Any",
+      "location": "Tryaway/controllers/users.ts:2",
+      "raw_source": "moment",
+      "incoming": [],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 94,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:193",
+      "raw_source": "res.status(400).send({ error: 'expired' })",
+      "incoming": [
+        114
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          113
+        ]
+      }
+    },
+    {
+      "id": 95,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:193",
+      "raw_source": "{ error: 'expired' }",
+      "incoming": [
+        113
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 96,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:193",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        116
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          115
+        ]
+      }
+    },
+    {
+      "id": 97,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:193",
+      "raw_source": "400",
+      "incoming": [
+        115
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 98,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:197",
+      "raw_source": "psl.get(domainFromUrl(req.body.url))",
+      "incoming": [
+        118
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          117
+        ]
+      }
+    },
+    {
+      "id": 99,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:197",
+      "raw_source": "domainFromUrl(req.body.url)",
+      "incoming": [
+        117,
+        119
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 100,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:199",
+      "raw_source": "createInbox(authId, user.email)",
+      "incoming": [
+        132
+      ],
+      "outgoing": [
+        128,
+        129
+      ],
+      "node_data": {
+        "args": [
+          130,
+          131
+        ]
+      }
+    },
+    {
+      "id": 101,
+      "class": "Function",
+      "location": "Tryaway/helpers/mailslurp.ts:9",
+      "raw_source": "createInbox = async (uuid: string, userEmail: string) => {\n  const inbox = await mailslurp.createInbox(); // { id: '123', emailAddress: '123@mailslurp.com' }\n  // await mailslurp.inboxForwarderController.createNewInboxForwarder({\n  //   // attach rule to inbox 2\n  //   inboxId: inbox.id,\n  //   createInboxForwarderOptions: {\n  //     // filter emails that match the sender from inbox 1 and send to inbox 3\n  //     field: CreateInboxForwarderOptionsFieldEnum.SENDER,\n  //     match: '*',\n  //     forwardToRecipients: [userEmail]\n  //   }\n  // });\n  await updateUser(uuid, {\n    mailslurp_id: inbox.id,\n    proxy_email: inbox.emailAddress\n  });\n}",
+      "incoming": [],
+      "outgoing": [
+        120,
+        127
+      ],
+      "node_data": {
+        "name": "createInbox"
+      }
+    },
+    {
+      "id": 102,
+      "class": "Call",
+      "location": "Tryaway/helpers/mailslurp.ts:10",
+      "raw_source": "mailslurp.createInbox()",
+      "incoming": [
+        120,
+        128
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 103,
+      "class": "Call",
+      "location": "Tryaway/helpers/mailslurp.ts:21",
+      "raw_source": "updateUser(uuid, {\n    mailslurp_id: inbox.id,\n    proxy_email: inbox.emailAddress\n  })",
+      "incoming": [
+        127,
+        129
+      ],
+      "outgoing": [
+        121,
+        122,
+        123,
+        124
+      ],
+      "node_data": {
+        "args": [
+          125,
+          126
+        ]
+      }
+    },
+    {
+      "id": 104,
+      "class": "Argument",
+      "location": "Tryaway/helpers/mailslurp.ts:21",
+      "raw_source": "uuid",
+      "incoming": [
+        125
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 105,
+      "class": "Argument",
+      "location": "Tryaway/helpers/mailslurp.ts:21",
+      "raw_source": "{\n    mailslurp_id: inbox.id,\n    proxy_email: inbox.emailAddress\n  }",
+      "incoming": [
+        126
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 106,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:199",
+      "raw_source": "authId",
+      "incoming": [
+        130
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 107,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:199",
+      "raw_source": "user.email",
+      "incoming": [
+        131
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 108,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:201",
+      "raw_source": "user.card_usage.push(domain)",
+      "incoming": [
+        134
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          133
+        ]
+      }
+    },
+    {
+      "id": 109,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:201",
+      "raw_source": "domain",
+      "incoming": [
+        133
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 110,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:202",
+      "raw_source": "updateUser(authId, { card_usage: user.card_usage })",
+      "incoming": [
+        141
+      ],
+      "outgoing": [
+        135,
+        136,
+        137,
+        138
+      ],
+      "node_data": {
+        "args": [
+          139,
+          140
+        ]
+      }
+    },
+    {
+      "id": 111,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:202",
+      "raw_source": "authId",
+      "incoming": [
+        139
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 112,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:202",
+      "raw_source": "{ card_usage: user.card_usage }",
+      "incoming": [
+        140
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 113,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:204",
+      "raw_source": "res.send({ email: user.proxy_email, card_token: user.card_token })",
+      "incoming": [
+        143
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          142
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:204",
+      "raw_source": "{ email: user.proxy_email, card_token: user.card_token }",
+      "incoming": [
+        142
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 115,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:206",
+      "raw_source": "console.log(error)",
+      "incoming": [
+        145
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          144
+        ]
+      }
+    },
+    {
+      "id": 116,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:206",
+      "raw_source": "error",
+      "incoming": [
+        144
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 117,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:207",
+      "raw_source": "res.status(400).send({ error })",
+      "incoming": [
+        147
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          146
+        ]
+      }
+    },
+    {
+      "id": 118,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:207",
+      "raw_source": "{ error }",
+      "incoming": [
+        146
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 119,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:207",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        149
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          148
+        ]
+      }
+    },
+    {
+      "id": 120,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:207",
+      "raw_source": "400",
+      "incoming": [
+        148
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 121,
+      "class": "Function",
+      "location": "Tryaway/controllers/users.ts:211",
+      "raw_source": "userHasPaid = async (req: IAuthorizedRouteReq, res: Response) => {\n  const { authId } = req;\n\n  try {\n    const user = await getUser(authId);\n\n    if (user.expiration <= moment().unix()) {\n      res.send({ hasPaid: false });\n    } else {\n      res.send({ hasPaid: true });\n    }\n  } catch (error) {\n    res.status(400).send({ error });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        156,
+        157,
+        158,
+        160,
+        162,
+        164,
+        166
+      ],
+      "node_data": {
+        "name": "userHasPaid"
+      }
+    },
+    {
+      "id": 122,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:215",
+      "raw_source": "getUser(authId)",
+      "incoming": [
+        156
+      ],
+      "outgoing": [
+        150,
+        151,
+        152,
+        153,
+        154
+      ],
+      "node_data": {
+        "args": [
+          155
+        ]
+      }
+    },
+    {
+      "id": 123,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:215",
+      "raw_source": "authId",
+      "incoming": [
+        155
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 124,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:217",
+      "raw_source": "moment().unix()",
+      "incoming": [
+        157
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 125,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:217",
+      "raw_source": "moment()",
+      "incoming": [
+        158
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 126,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:218",
+      "raw_source": "res.send({ hasPaid: false })",
+      "incoming": [
+        160
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          159
+        ]
+      }
+    },
+    {
+      "id": 127,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:218",
+      "raw_source": "{ hasPaid: false }",
+      "incoming": [
+        159
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 128,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:220",
+      "raw_source": "res.send({ hasPaid: true })",
+      "incoming": [
+        162
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          161
+        ]
+      }
+    },
+    {
+      "id": 129,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:220",
+      "raw_source": "{ hasPaid: true }",
+      "incoming": [
+        161
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 130,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:223",
+      "raw_source": "res.status(400).send({ error })",
+      "incoming": [
+        164
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          163
+        ]
+      }
+    },
+    {
+      "id": 131,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:223",
+      "raw_source": "{ error }",
+      "incoming": [
+        163
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 132,
+      "class": "Call",
+      "location": "Tryaway/controllers/users.ts:223",
+      "raw_source": "res.status(400)",
+      "incoming": [
+        166
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          165
+        ]
+      }
+    },
+    {
+      "id": 133,
+      "class": "Argument",
+      "location": "Tryaway/controllers/users.ts:223",
+      "raw_source": "400",
+      "incoming": [
+        165
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 134,
+      "class": "Function",
+      "location": "Tryaway/helpers/firebase.ts:14",
+      "raw_source": "getStripeCustomer = async (stripeCustId: string) => {\n  const stripeRef = firebase.firestore().collection('stripe');\n  const customer = await stripeRef.doc(stripeCustId).get();\n  return customer.data();\n}",
+      "incoming": [],
+      "outgoing": [
+        168,
+        169,
+        170,
+        172,
+        173
+      ],
+      "node_data": {
+        "name": "getStripeCustomer"
+      }
+    },
+    {
+      "id": 135,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:15",
+      "raw_source": "firebase.firestore().collection('stripe')",
+      "incoming": [
+        168,
+        197
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          167
+        ]
+      }
+    },
+    {
+      "id": 136,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:15",
+      "raw_source": "'stripe'",
+      "incoming": [
+        167
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 137,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:16",
+      "raw_source": "stripeRef.doc(stripeCustId).get()",
+      "incoming": [
+        170,
+        199
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 138,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:16",
+      "raw_source": "stripeRef.doc(stripeCustId)",
+      "incoming": [
+        172,
+        200
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          171
+        ]
+      }
+    },
+    {
+      "id": 139,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:16",
+      "raw_source": "stripeCustId",
+      "incoming": [
+        171
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 140,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:17",
+      "raw_source": "customer.data()",
+      "incoming": [
+        173,
+        201
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 141,
+      "class": "Function",
+      "location": "Tryaway/helpers/firebase.ts:20",
+      "raw_source": "setUser = async (uuid: string, data: any) => {\n  const usersRef = firebase.firestore().collection('users');\n  await usersRef.doc(uuid).set(data);\n}",
+      "incoming": [],
+      "outgoing": [
+        175,
+        176,
+        178,
+        180
+      ],
+      "node_data": {
+        "name": "setUser"
+      }
+    },
+    {
+      "id": 142,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:21",
+      "raw_source": "firebase.firestore().collection('users')",
+      "incoming": [
+        175
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          174
+        ]
+      }
+    },
+    {
+      "id": 143,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:21",
+      "raw_source": "'users'",
+      "incoming": [
+        174
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 144,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:22",
+      "raw_source": "usersRef.doc(uuid).set(data)",
+      "incoming": [
+        178
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          177
+        ]
+      }
+    },
+    {
+      "id": 145,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:22",
+      "raw_source": "data",
+      "incoming": [
+        177
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 146,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:22",
+      "raw_source": "usersRef.doc(uuid)",
+      "incoming": [
+        180
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          179
+        ]
+      }
+    },
+    {
+      "id": 147,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:22",
+      "raw_source": "uuid",
+      "incoming": [
+        179
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 148,
+      "class": "Function",
+      "location": "Tryaway/helpers/firebase.ts:25",
+      "raw_source": "setStripeCustomer = async (stripeCustId: string, uuid: string) => {\n  const stripeRef = firebase.firestore().collection('stripe');\n  await stripeRef.doc(stripeCustId).set({ uuid });\n}",
+      "incoming": [],
+      "outgoing": [
+        182,
+        183,
+        185,
+        187
+      ],
+      "node_data": {
+        "name": "setStripeCustomer"
+      }
+    },
+    {
+      "id": 149,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:26",
+      "raw_source": "firebase.firestore().collection('stripe')",
+      "incoming": [
+        182
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          181
+        ]
+      }
+    },
+    {
+      "id": 150,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:26",
+      "raw_source": "'stripe'",
+      "incoming": [
+        181
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 151,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:27",
+      "raw_source": "stripeRef.doc(stripeCustId).set({ uuid })",
+      "incoming": [
+        185
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          184
+        ]
+      }
+    },
+    {
+      "id": 152,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:27",
+      "raw_source": "{ uuid }",
+      "incoming": [
+        184
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 153,
+      "class": "Call",
+      "location": "Tryaway/helpers/firebase.ts:27",
+      "raw_source": "stripeRef.doc(stripeCustId)",
+      "incoming": [
+        187
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          186
+        ]
+      }
+    },
+    {
+      "id": 154,
+      "class": "Argument",
+      "location": "Tryaway/helpers/firebase.ts:27",
+      "raw_source": "stripeCustId",
+      "incoming": [
+        186
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 155,
+      "class": "Function",
+      "location": "Tryaway/helpers/payments.ts:5",
+      "raw_source": "handlePaymentSuccess = async (dataObject: any) => {\n  // The subscription automatically activates after successful payment\n  // Set the payment method used to pay the invoice\n  // as the default payment method for that subscription\n  const subscriptionId = dataObject.subscription;\n  const paymentIntentId = dataObject.payment_intent;\n\n  // Retrieve the payment intent used to pay the subscription\n  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);\n\n  try {\n    await stripe.subscriptions.update(subscriptionId, {\n      default_payment_method: paymentIntent.payment_method.toString()\n    });\n\n    console.log(\n      'Default payment method set for subscription:' +\n        paymentIntent.payment_method\n    );\n\n    // Update the user's subscription status in Firestore\n    const stripeCustObj = await getStripeCustomer(dataObject.customer);\n    const uuid = stripeCustObj.uuid;\n    await updateUser(uuid, { expiration: moment().add(1, 'M').unix() });\n  } catch (err) {\n    console.log(err);\n    console.log(\n      `⚠️  Falied to update the default payment method for subscription: ${subscriptionId}`\n    );\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        189,
+        193,
+        194,
+        196,
+        203,
+        215,
+        216,
+        217,
+        218,
+        220,
+        222
+      ],
+      "node_data": {
+        "name": "handlePaymentSuccess"
+      }
+    },
+    {
+      "id": 156,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:13",
+      "raw_source": "stripe.paymentIntents.retrieve(paymentIntentId)",
+      "incoming": [
+        189
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          188
+        ]
+      }
+    },
+    {
+      "id": 157,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:13",
+      "raw_source": "paymentIntentId",
+      "incoming": [
+        188
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 158,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:16",
+      "raw_source": "stripe.subscriptions.update(subscriptionId, {\n      default_payment_method: paymentIntent.payment_method.toString()\n    })",
+      "incoming": [
+        193
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          190,
+          192
+        ]
+      }
+    },
+    {
+      "id": 159,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:16",
+      "raw_source": "subscriptionId",
+      "incoming": [
+        190
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 160,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:16",
+      "raw_source": "{\n      default_payment_method: paymentIntent.payment_method.toString()\n    }",
+      "incoming": [
+        192
+      ],
+      "outgoing": [
+        191
+      ],
+      "node_data": {}
+    },
+    {
+      "id": 161,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:17",
+      "raw_source": "paymentIntent.payment_method.toString()",
+      "incoming": [
+        191,
+        194
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 162,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:20",
+      "raw_source": "console.log(\n      'Default payment method set for subscription:' +\n        paymentIntent.payment_method\n    )",
+      "incoming": [
+        196
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          195
+        ]
+      }
+    },
+    {
+      "id": 163,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:21",
+      "raw_source": "'Default payment method set for subscription:' +\n        paymentIntent.payment_method",
+      "incoming": [
+        195
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 164,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:26",
+      "raw_source": "getStripeCustomer(dataObject.customer)",
+      "incoming": [
+        203
+      ],
+      "outgoing": [
+        197,
+        198,
+        199,
+        200,
+        201
+      ],
+      "node_data": {
+        "args": [
+          202
+        ]
+      }
+    },
+    {
+      "id": 165,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:26",
+      "raw_source": "dataObject.customer",
+      "incoming": [
+        202
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 166,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "updateUser(uuid, { expiration: moment().add(1, 'M').unix() })",
+      "incoming": [
+        215
+      ],
+      "outgoing": [
+        204,
+        205,
+        206,
+        207
+      ],
+      "node_data": {
+        "args": [
+          208,
+          214
+        ]
+      }
+    },
+    {
+      "id": 167,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "uuid",
+      "incoming": [
+        208
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 168,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "{ expiration: moment().add(1, 'M').unix() }",
+      "incoming": [
+        214
+      ],
+      "outgoing": [
+        209,
+        212,
+        213
+      ],
+      "node_data": {}
+    },
+    {
+      "id": 169,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "moment().add(1, 'M').unix()",
+      "incoming": [
+        209,
+        216
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 170,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "moment().add(1, 'M')",
+      "incoming": [
+        212,
+        217
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          210,
+          211
+        ]
+      }
+    },
+    {
+      "id": 171,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "1",
+      "incoming": [
+        210
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 172,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "'M'",
+      "incoming": [
+        211
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 173,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:28",
+      "raw_source": "moment()",
+      "incoming": [
+        213,
+        218
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 174,
+      "class": "Any",
+      "location": "Tryaway/helpers/payments.ts:2",
+      "raw_source": "moment",
+      "incoming": [],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 175,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:30",
+      "raw_source": "console.log(err)",
+      "incoming": [
+        220
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          219
+        ]
+      }
+    },
+    {
+      "id": 176,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:30",
+      "raw_source": "err",
+      "incoming": [
+        219
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 177,
+      "class": "Call",
+      "location": "Tryaway/helpers/payments.ts:31",
+      "raw_source": "console.log(\n      `⚠️  Falied to update the default payment method for subscription: ${subscriptionId}`\n    )",
+      "incoming": [
+        222
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          221
+        ]
+      }
+    },
+    {
+      "id": 178,
+      "class": "Argument",
+      "location": "Tryaway/helpers/payments.ts:32",
+      "raw_source": "`⚠️  Falied to update the default payment method for subscription: ${subscriptionId}`",
+      "incoming": [
+        221
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 179,
+      "class": "Function",
+      "location": "Tryaway/middleware/firebaseAuth.ts:32",
+      "raw_source": "checkIfAuthenticated: RequestHandler = async (\n  req: IAuthorizedRouteReq,\n  res,\n  next\n) => {\n  let authToken = '';\n  if (\n    req.headers.authorization &&\n    req.headers.authorization.split(' ')[0] === 'Bearer'\n  ) {\n    authToken = req.headers.authorization.split(' ')[1];\n  } else {\n    authToken = null;\n  }\n  try {\n    const userInfo = await firebase.auth().verifyIdToken(authToken);\n    req.authId = userInfo.uid;\n    req.email = userInfo.email;\n    return next();\n  } catch (e) {\n    return res\n      .status(401)\n      .send({ error: 'You are not authorized to make this request' });\n  }\n}",
+      "incoming": [],
+      "outgoing": [
+        224,
+        226,
+        228,
+        229,
+        230,
+        232,
+        234
+      ],
+      "node_data": {
+        "name": "checkIfAuthenticated"
+      }
+    },
+    {
+      "id": 180,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:40",
+      "raw_source": "req.headers.authorization.split(' ')",
+      "incoming": [
+        224
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          223
+        ]
+      }
+    },
+    {
+      "id": 181,
+      "class": "Argument",
+      "location": "Tryaway/middleware/firebaseAuth.ts:40",
+      "raw_source": "' '",
+      "incoming": [
+        223
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 182,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:42",
+      "raw_source": "req.headers.authorization.split(' ')",
+      "incoming": [
+        226
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          225
+        ]
+      }
+    },
+    {
+      "id": 183,
+      "class": "Argument",
+      "location": "Tryaway/middleware/firebaseAuth.ts:42",
+      "raw_source": "' '",
+      "incoming": [
+        225
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 184,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:47",
+      "raw_source": "firebase.auth().verifyIdToken(authToken)",
+      "incoming": [
+        228
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          227
+        ]
+      }
+    },
+    {
+      "id": 185,
+      "class": "Argument",
+      "location": "Tryaway/middleware/firebaseAuth.ts:47",
+      "raw_source": "authToken",
+      "incoming": [
+        227
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 186,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:50",
+      "raw_source": "next()",
+      "incoming": [
+        230
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": []
+      }
+    },
+    {
+      "id": 187,
+      "class": "Any",
+      "location": "Tryaway/middleware/firebaseAuth.ts:35",
+      "raw_source": "next",
+      "incoming": [],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 188,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:52",
+      "raw_source": "res\n      .status(401)\n      .send({ error: 'You are not authorized to make this request' })",
+      "incoming": [
+        232
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          231
+        ]
+      }
+    },
+    {
+      "id": 189,
+      "class": "Argument",
+      "location": "Tryaway/middleware/firebaseAuth.ts:54",
+      "raw_source": "{ error: 'You are not authorized to make this request' }",
+      "incoming": [
+        231
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 190,
+      "class": "Call",
+      "location": "Tryaway/middleware/firebaseAuth.ts:52",
+      "raw_source": "res\n      .status(401)",
+      "incoming": [
+        234
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          233
+        ]
+      }
+    },
+    {
+      "id": 191,
+      "class": "Argument",
+      "location": "Tryaway/middleware/firebaseAuth.ts:53",
+      "raw_source": "401",
+      "incoming": [
+        233
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 192,
+      "class": "Object",
+      "location": "Tryaway/routes/index.ts:13",
+      "raw_source": "router = express.Router()",
+      "incoming": [],
+      "outgoing": [
+        238,
+        242,
+        246,
+        250,
+        254,
+        258,
+        262
+      ],
+      "node_data": {
+        "name": "router"
+      }
+    },
+    {
+      "id": 193,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:44",
+      "raw_source": "router.post('/signup', checkIfAuthenticated, createUser)",
+      "incoming": [
+        238
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          235,
+          236,
+          237
+        ]
+      }
+    },
+    {
+      "id": 194,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:44",
+      "raw_source": "'/signup'",
+      "incoming": [
+        235
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 195,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:44",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        236
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 196,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:44",
+      "raw_source": "createUser",
+      "incoming": [
+        237
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 197,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:45",
+      "raw_source": "router.get('/userhaspaid', checkIfAuthenticated, userHasPaid)",
+      "incoming": [
+        242
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          239,
+          240,
+          241
+        ]
+      }
+    },
+    {
+      "id": 198,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:45",
+      "raw_source": "'/userhaspaid'",
+      "incoming": [
+        239
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 199,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:45",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        240
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 200,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:45",
+      "raw_source": "userHasPaid",
+      "incoming": [
+        241
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 201,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:46",
+      "raw_source": "router.post('/updatesubscription', checkIfAuthenticated, updateSubscription)",
+      "incoming": [
+        246
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          243,
+          244,
+          245
+        ]
+      }
+    },
+    {
+      "id": 202,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:46",
+      "raw_source": "'/updatesubscription'",
+      "incoming": [
+        243
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 203,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:46",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        244
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 204,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:46",
+      "raw_source": "updateSubscription",
+      "incoming": [
+        245
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 205,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:47",
+      "raw_source": "router.post('/setAddress', checkIfAuthenticated, setAddress)",
+      "incoming": [
+        250
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          247,
+          248,
+          249
+        ]
+      }
+    },
+    {
+      "id": 206,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:47",
+      "raw_source": "'/setAddress'",
+      "incoming": [
+        247
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 207,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:47",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        248
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 208,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:47",
+      "raw_source": "setAddress",
+      "incoming": [
+        249
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 209,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:48",
+      "raw_source": "router.get('/paymentMethodID', checkIfAuthenticated, paymentMethodID)",
+      "incoming": [
+        254
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          251,
+          252,
+          253
+        ]
+      }
+    },
+    {
+      "id": 210,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:48",
+      "raw_source": "'/paymentMethodID'",
+      "incoming": [
+        251
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 211,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:48",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        252
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 212,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:48",
+      "raw_source": "paymentMethodID",
+      "incoming": [
+        253
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 213,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:50",
+      "raw_source": "router.post('/activate', checkIfAuthenticated, activateAccount)",
+      "incoming": [
+        258
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          255,
+          256,
+          257
+        ]
+      }
+    },
+    {
+      "id": 214,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:50",
+      "raw_source": "'/activate'",
+      "incoming": [
+        255
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 215,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:50",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        256
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 216,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:50",
+      "raw_source": "activateAccount",
+      "incoming": [
+        257
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 217,
+      "class": "Call",
+      "location": "Tryaway/routes/index.ts:51",
+      "raw_source": "router.post('/deactivate', checkIfAuthenticated, deactivateUser)",
+      "incoming": [
+        262
+      ],
+      "outgoing": [],
+      "node_data": {
+        "args": [
+          259,
+          260,
+          261
+        ]
+      }
+    },
+    {
+      "id": 218,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:51",
+      "raw_source": "'/deactivate'",
+      "incoming": [
+        259
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 219,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:51",
+      "raw_source": "checkIfAuthenticated",
+      "incoming": [
+        260
+      ],
+      "outgoing": [],
+      "node_data": {}
+    },
+    {
+      "id": 220,
+      "class": "Argument",
+      "location": "Tryaway/routes/index.ts:51",
+      "raw_source": "deactivateUser",
+      "incoming": [
+        261
+      ],
+      "outgoing": [],
+      "node_data": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 1,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 2,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 3,
+      "label": ""
+    },
+    {
+      "id": 3,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 4,
+      "label": ""
+    },
+    {
+      "id": 4,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 5,
+      "label": ""
+    },
+    {
+      "id": 5,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 6,
+      "label": ""
+    },
+    {
+      "id": 6,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 7,
+      "label": ""
+    },
+    {
+      "id": 7,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 8,
+      "label": ""
+    },
+    {
+      "id": 8,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 9,
+      "label": ""
+    },
+    {
+      "id": 9,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 10,
+      "label": ""
+    },
+    {
+      "id": 10,
+      "type": "Call",
+      "source_node_id": 0,
+      "destination_node_id": 11,
+      "label": ""
+    },
+    {
+      "id": 11,
+      "type": "Argument",
+      "source_node_id": 14,
+      "destination_node_id": 15,
+      "label": ""
+    },
+    {
+      "id": 12,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 14,
+      "label": ""
+    },
+    {
+      "id": 13,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 9,
+      "label": ""
+    },
+    {
+      "id": 14,
+      "type": "Argument",
+      "source_node_id": 16,
+      "destination_node_id": 17,
+      "label": ""
+    },
+    {
+      "id": 15,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 16,
+      "label": ""
+    },
+    {
+      "id": 16,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 10,
+      "label": ""
+    },
+    {
+      "id": 17,
+      "type": "Argument",
+      "source_node_id": 20,
+      "destination_node_id": 21,
+      "label": ""
+    },
+    {
+      "id": 18,
+      "type": "Child",
+      "source_node_id": 19,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 19,
+      "type": "Child",
+      "source_node_id": 19,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 20,
+      "type": "Child",
+      "source_node_id": 19,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 21,
+      "type": "Argument",
+      "source_node_id": 23,
+      "destination_node_id": 24,
+      "label": ""
+    },
+    {
+      "id": 22,
+      "type": "Child",
+      "source_node_id": 19,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 23,
+      "type": "Child",
+      "source_node_id": 19,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 24,
+      "type": "Child",
+      "source_node_id": 18,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 25,
+      "type": "Child",
+      "source_node_id": 18,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 26,
+      "type": "Child",
+      "source_node_id": 18,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 27,
+      "type": "Child",
+      "source_node_id": 18,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 28,
+      "type": "Child",
+      "source_node_id": 18,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 29,
+      "type": "Argument",
+      "source_node_id": 18,
+      "destination_node_id": 26,
+      "label": ""
+    },
+    {
+      "id": 30,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 18,
+      "label": ""
+    },
+    {
+      "id": 31,
+      "type": "Argument",
+      "source_node_id": 27,
+      "destination_node_id": 28,
+      "label": ""
+    },
+    {
+      "id": 32,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 27,
+      "label": ""
+    },
+    {
+      "id": 33,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 29,
+      "label": ""
+    },
+    {
+      "id": 34,
+      "type": "Argument",
+      "source_node_id": 30,
+      "destination_node_id": 31,
+      "label": ""
+    },
+    {
+      "id": 35,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 30,
+      "label": ""
+    },
+    {
+      "id": 36,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 32,
+      "label": ""
+    },
+    {
+      "id": 37,
+      "type": "Argument",
+      "source_node_id": 33,
+      "destination_node_id": 34,
+      "label": ""
+    },
+    {
+      "id": 38,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 33,
+      "label": ""
+    },
+    {
+      "id": 39,
+      "type": "Argument",
+      "source_node_id": 35,
+      "destination_node_id": 36,
+      "label": ""
+    },
+    {
+      "id": 40,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 35,
+      "label": ""
+    },
+    {
+      "id": 41,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 11,
+      "label": ""
+    },
+    {
+      "id": 42,
+      "type": "Argument",
+      "source_node_id": 37,
+      "destination_node_id": 38,
+      "label": ""
+    },
+    {
+      "id": 43,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 37,
+      "label": ""
+    },
+    {
+      "id": 44,
+      "type": "Argument",
+      "source_node_id": 39,
+      "destination_node_id": 40,
+      "label": ""
+    },
+    {
+      "id": 45,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 39,
+      "label": ""
+    },
+    {
+      "id": 46,
+      "type": "Argument",
+      "source_node_id": 41,
+      "destination_node_id": 42,
+      "label": ""
+    },
+    {
+      "id": 47,
+      "type": "Child",
+      "source_node_id": 13,
+      "destination_node_id": 41,
+      "label": ""
+    },
+    {
+      "id": 48,
+      "type": "Argument",
+      "source_node_id": 46,
+      "destination_node_id": 47,
+      "label": ""
+    },
+    {
+      "id": 49,
+      "type": "Child",
+      "source_node_id": 45,
+      "destination_node_id": 46,
+      "label": ""
+    },
+    {
+      "id": 50,
+      "type": "Child",
+      "source_node_id": 45,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 51,
+      "type": "Argument",
+      "source_node_id": 48,
+      "destination_node_id": 49,
+      "label": ""
+    },
+    {
+      "id": 52,
+      "type": "Child",
+      "source_node_id": 45,
+      "destination_node_id": 48,
+      "label": ""
+    },
+    {
+      "id": 53,
+      "type": "Argument",
+      "source_node_id": 50,
+      "destination_node_id": 51,
+      "label": ""
+    },
+    {
+      "id": 54,
+      "type": "Child",
+      "source_node_id": 45,
+      "destination_node_id": 50,
+      "label": ""
+    },
+    {
+      "id": 55,
+      "type": "Child",
+      "source_node_id": 44,
+      "destination_node_id": 46,
+      "label": ""
+    },
+    {
+      "id": 56,
+      "type": "Child",
+      "source_node_id": 44,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 57,
+      "type": "Child",
+      "source_node_id": 44,
+      "destination_node_id": 48,
+      "label": ""
+    },
+    {
+      "id": 58,
+      "type": "Child",
+      "source_node_id": 44,
+      "destination_node_id": 50,
+      "label": ""
+    },
+    {
+      "id": 59,
+      "type": "Argument",
+      "source_node_id": 44,
+      "destination_node_id": 52,
+      "label": ""
+    },
+    {
+      "id": 60,
+      "type": "Argument",
+      "source_node_id": 44,
+      "destination_node_id": 53,
+      "label": ""
+    },
+    {
+      "id": 61,
+      "type": "Child",
+      "source_node_id": 43,
+      "destination_node_id": 44,
+      "label": ""
+    },
+    {
+      "id": 62,
+      "type": "Argument",
+      "source_node_id": 54,
+      "destination_node_id": 55,
+      "label": ""
+    },
+    {
+      "id": 63,
+      "type": "Child",
+      "source_node_id": 43,
+      "destination_node_id": 54,
+      "label": ""
+    },
+    {
+      "id": 64,
+      "type": "Argument",
+      "source_node_id": 56,
+      "destination_node_id": 57,
+      "label": ""
+    },
+    {
+      "id": 65,
+      "type": "Child",
+      "source_node_id": 43,
+      "destination_node_id": 56,
+      "label": ""
+    },
+    {
+      "id": 66,
+      "type": "Argument",
+      "source_node_id": 58,
+      "destination_node_id": 59,
+      "label": ""
+    },
+    {
+      "id": 67,
+      "type": "Child",
+      "source_node_id": 43,
+      "destination_node_id": 58,
+      "label": ""
+    },
+    {
+      "id": 68,
+      "type": "Argument",
+      "source_node_id": 60,
+      "destination_node_id": 61,
+      "label": ""
+    },
+    {
+      "id": 69,
+      "type": "Child",
+      "source_node_id": 43,
+      "destination_node_id": 60,
+      "label": ""
+    },
+    {
+      "id": 70,
+      "type": "Child",
+      "source_node_id": 63,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 71,
+      "type": "Child",
+      "source_node_id": 63,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 72,
+      "type": "Child",
+      "source_node_id": 63,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 73,
+      "type": "Child",
+      "source_node_id": 63,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 74,
+      "type": "Child",
+      "source_node_id": 63,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 75,
+      "type": "Argument",
+      "source_node_id": 63,
+      "destination_node_id": 64,
+      "label": ""
+    },
+    {
+      "id": 76,
+      "type": "Child",
+      "source_node_id": 62,
+      "destination_node_id": 63,
+      "label": ""
+    },
+    {
+      "id": 77,
+      "type": "Argument",
+      "source_node_id": 65,
+      "destination_node_id": 66,
+      "label": ""
+    },
+    {
+      "id": 78,
+      "type": "Child",
+      "source_node_id": 62,
+      "destination_node_id": 65,
+      "label": ""
+    },
+    {
+      "id": 79,
+      "type": "Argument",
+      "source_node_id": 67,
+      "destination_node_id": 68,
+      "label": ""
+    },
+    {
+      "id": 80,
+      "type": "Child",
+      "source_node_id": 62,
+      "destination_node_id": 67,
+      "label": ""
+    },
+    {
+      "id": 81,
+      "type": "Argument",
+      "source_node_id": 69,
+      "destination_node_id": 70,
+      "label": ""
+    },
+    {
+      "id": 82,
+      "type": "Child",
+      "source_node_id": 62,
+      "destination_node_id": 69,
+      "label": ""
+    },
+    {
+      "id": 83,
+      "type": "Argument",
+      "source_node_id": 71,
+      "destination_node_id": 72,
+      "label": ""
+    },
+    {
+      "id": 84,
+      "type": "Child",
+      "source_node_id": 62,
+      "destination_node_id": 71,
+      "label": ""
+    },
+    {
+      "id": 85,
+      "type": "Child",
+      "source_node_id": 74,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 86,
+      "type": "Child",
+      "source_node_id": 74,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 87,
+      "type": "Child",
+      "source_node_id": 74,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 88,
+      "type": "Child",
+      "source_node_id": 74,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 89,
+      "type": "Child",
+      "source_node_id": 74,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 90,
+      "type": "Argument",
+      "source_node_id": 74,
+      "destination_node_id": 75,
+      "label": ""
+    },
+    {
+      "id": 91,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 74,
+      "label": ""
+    },
+    {
+      "id": 92,
+      "type": "Argument",
+      "source_node_id": 76,
+      "destination_node_id": 77,
+      "label": ""
+    },
+    {
+      "id": 93,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 76,
+      "label": ""
+    },
+    {
+      "id": 94,
+      "type": "Argument",
+      "source_node_id": 78,
+      "destination_node_id": 79,
+      "label": ""
+    },
+    {
+      "id": 95,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 78,
+      "label": ""
+    },
+    {
+      "id": 96,
+      "type": "Argument",
+      "source_node_id": 80,
+      "destination_node_id": 81,
+      "label": ""
+    },
+    {
+      "id": 97,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 80,
+      "label": ""
+    },
+    {
+      "id": 98,
+      "type": "Argument",
+      "source_node_id": 82,
+      "destination_node_id": 83,
+      "label": ""
+    },
+    {
+      "id": 99,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 82,
+      "label": ""
+    },
+    {
+      "id": 100,
+      "type": "Argument",
+      "source_node_id": 84,
+      "destination_node_id": 85,
+      "label": ""
+    },
+    {
+      "id": 101,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 84,
+      "label": ""
+    },
+    {
+      "id": 102,
+      "type": "Argument",
+      "source_node_id": 86,
+      "destination_node_id": 87,
+      "label": ""
+    },
+    {
+      "id": 103,
+      "type": "Child",
+      "source_node_id": 73,
+      "destination_node_id": 86,
+      "label": ""
+    },
+    {
+      "id": 104,
+      "type": "Child",
+      "source_node_id": 89,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 105,
+      "type": "Child",
+      "source_node_id": 89,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 106,
+      "type": "Child",
+      "source_node_id": 89,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 107,
+      "type": "Child",
+      "source_node_id": 89,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 108,
+      "type": "Child",
+      "source_node_id": 89,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 109,
+      "type": "Argument",
+      "source_node_id": 89,
+      "destination_node_id": 90,
+      "label": ""
+    },
+    {
+      "id": 110,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 89,
+      "label": ""
+    },
+    {
+      "id": 111,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 91,
+      "label": ""
+    },
+    {
+      "id": 112,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 92,
+      "label": ""
+    },
+    {
+      "id": 113,
+      "type": "Argument",
+      "source_node_id": 94,
+      "destination_node_id": 95,
+      "label": ""
+    },
+    {
+      "id": 114,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 94,
+      "label": ""
+    },
+    {
+      "id": 115,
+      "type": "Argument",
+      "source_node_id": 96,
+      "destination_node_id": 97,
+      "label": ""
+    },
+    {
+      "id": 116,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 96,
+      "label": ""
+    },
+    {
+      "id": 117,
+      "type": "Argument",
+      "source_node_id": 98,
+      "destination_node_id": 99,
+      "label": ""
+    },
+    {
+      "id": 118,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 98,
+      "label": ""
+    },
+    {
+      "id": 119,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 99,
+      "label": ""
+    },
+    {
+      "id": 120,
+      "type": "Child",
+      "source_node_id": 101,
+      "destination_node_id": 102,
+      "label": ""
+    },
+    {
+      "id": 121,
+      "type": "Child",
+      "source_node_id": 103,
+      "destination_node_id": 46,
+      "label": ""
+    },
+    {
+      "id": 122,
+      "type": "Child",
+      "source_node_id": 103,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 123,
+      "type": "Child",
+      "source_node_id": 103,
+      "destination_node_id": 48,
+      "label": ""
+    },
+    {
+      "id": 124,
+      "type": "Child",
+      "source_node_id": 103,
+      "destination_node_id": 50,
+      "label": ""
+    },
+    {
+      "id": 125,
+      "type": "Argument",
+      "source_node_id": 103,
+      "destination_node_id": 104,
+      "label": ""
+    },
+    {
+      "id": 126,
+      "type": "Argument",
+      "source_node_id": 103,
+      "destination_node_id": 105,
+      "label": ""
+    },
+    {
+      "id": 127,
+      "type": "Child",
+      "source_node_id": 101,
+      "destination_node_id": 103,
+      "label": ""
+    },
+    {
+      "id": 128,
+      "type": "Child",
+      "source_node_id": 100,
+      "destination_node_id": 102,
+      "label": ""
+    },
+    {
+      "id": 129,
+      "type": "Child",
+      "source_node_id": 100,
+      "destination_node_id": 103,
+      "label": ""
+    },
+    {
+      "id": 130,
+      "type": "Argument",
+      "source_node_id": 100,
+      "destination_node_id": 106,
+      "label": ""
+    },
+    {
+      "id": 131,
+      "type": "Argument",
+      "source_node_id": 100,
+      "destination_node_id": 107,
+      "label": ""
+    },
+    {
+      "id": 132,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 100,
+      "label": ""
+    },
+    {
+      "id": 133,
+      "type": "Argument",
+      "source_node_id": 108,
+      "destination_node_id": 109,
+      "label": ""
+    },
+    {
+      "id": 134,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 108,
+      "label": ""
+    },
+    {
+      "id": 135,
+      "type": "Child",
+      "source_node_id": 110,
+      "destination_node_id": 46,
+      "label": ""
+    },
+    {
+      "id": 136,
+      "type": "Child",
+      "source_node_id": 110,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 137,
+      "type": "Child",
+      "source_node_id": 110,
+      "destination_node_id": 48,
+      "label": ""
+    },
+    {
+      "id": 138,
+      "type": "Child",
+      "source_node_id": 110,
+      "destination_node_id": 50,
+      "label": ""
+    },
+    {
+      "id": 139,
+      "type": "Argument",
+      "source_node_id": 110,
+      "destination_node_id": 111,
+      "label": ""
+    },
+    {
+      "id": 140,
+      "type": "Argument",
+      "source_node_id": 110,
+      "destination_node_id": 112,
+      "label": ""
+    },
+    {
+      "id": 141,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 110,
+      "label": ""
+    },
+    {
+      "id": 142,
+      "type": "Argument",
+      "source_node_id": 113,
+      "destination_node_id": 114,
+      "label": ""
+    },
+    {
+      "id": 143,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 113,
+      "label": ""
+    },
+    {
+      "id": 144,
+      "type": "Argument",
+      "source_node_id": 115,
+      "destination_node_id": 116,
+      "label": ""
+    },
+    {
+      "id": 145,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 115,
+      "label": ""
+    },
+    {
+      "id": 146,
+      "type": "Argument",
+      "source_node_id": 117,
+      "destination_node_id": 118,
+      "label": ""
+    },
+    {
+      "id": 147,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 117,
+      "label": ""
+    },
+    {
+      "id": 148,
+      "type": "Argument",
+      "source_node_id": 119,
+      "destination_node_id": 120,
+      "label": ""
+    },
+    {
+      "id": 149,
+      "type": "Child",
+      "source_node_id": 88,
+      "destination_node_id": 119,
+      "label": ""
+    },
+    {
+      "id": 150,
+      "type": "Child",
+      "source_node_id": 122,
+      "destination_node_id": 20,
+      "label": ""
+    },
+    {
+      "id": 151,
+      "type": "Child",
+      "source_node_id": 122,
+      "destination_node_id": 1,
+      "label": ""
+    },
+    {
+      "id": 152,
+      "type": "Child",
+      "source_node_id": 122,
+      "destination_node_id": 22,
+      "label": ""
+    },
+    {
+      "id": 153,
+      "type": "Child",
+      "source_node_id": 122,
+      "destination_node_id": 23,
+      "label": ""
+    },
+    {
+      "id": 154,
+      "type": "Child",
+      "source_node_id": 122,
+      "destination_node_id": 25,
+      "label": ""
+    },
+    {
+      "id": 155,
+      "type": "Argument",
+      "source_node_id": 122,
+      "destination_node_id": 123,
+      "label": ""
+    },
+    {
+      "id": 156,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 122,
+      "label": ""
+    },
+    {
+      "id": 157,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 124,
+      "label": ""
+    },
+    {
+      "id": 158,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 125,
+      "label": ""
+    },
+    {
+      "id": 159,
+      "type": "Argument",
+      "source_node_id": 126,
+      "destination_node_id": 127,
+      "label": ""
+    },
+    {
+      "id": 160,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 126,
+      "label": ""
+    },
+    {
+      "id": 161,
+      "type": "Argument",
+      "source_node_id": 128,
+      "destination_node_id": 129,
+      "label": ""
+    },
+    {
+      "id": 162,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 128,
+      "label": ""
+    },
+    {
+      "id": 163,
+      "type": "Argument",
+      "source_node_id": 130,
+      "destination_node_id": 131,
+      "label": ""
+    },
+    {
+      "id": 164,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 130,
+      "label": ""
+    },
+    {
+      "id": 165,
+      "type": "Argument",
+      "source_node_id": 132,
+      "destination_node_id": 133,
+      "label": ""
+    },
+    {
+      "id": 166,
+      "type": "Child",
+      "source_node_id": 121,
+      "destination_node_id": 132,
+      "label": ""
+    },
+    {
+      "id": 167,
+      "type": "Argument",
+      "source_node_id": 135,
+      "destination_node_id": 136,
+      "label": ""
+    },
+    {
+      "id": 168,
+      "type": "Child",
+      "source_node_id": 134,
+      "destination_node_id": 135,
+      "label": ""
+    },
+    {
+      "id": 169,
+      "type": "Child",
+      "source_node_id": 134,
+      "destination_node_id": 3,
+      "label": ""
+    },
+    {
+      "id": 170,
+      "type": "Child",
+      "source_node_id": 134,
+      "destination_node_id": 137,
+      "label": ""
+    },
+    {
+      "id": 171,
+      "type": "Argument",
+      "source_node_id": 138,
+      "destination_node_id": 139,
+      "label": ""
+    },
+    {
+      "id": 172,
+      "type": "Child",
+      "source_node_id": 134,
+      "destination_node_id": 138,
+      "label": ""
+    },
+    {
+      "id": 173,
+      "type": "Child",
+      "source_node_id": 134,
+      "destination_node_id": 140,
+      "label": ""
+    },
+    {
+      "id": 174,
+      "type": "Argument",
+      "source_node_id": 142,
+      "destination_node_id": 143,
+      "label": ""
+    },
+    {
+      "id": 175,
+      "type": "Child",
+      "source_node_id": 141,
+      "destination_node_id": 142,
+      "label": ""
+    },
+    {
+      "id": 176,
+      "type": "Child",
+      "source_node_id": 141,
+      "destination_node_id": 4,
+      "label": ""
+    },
+    {
+      "id": 177,
+      "type": "Argument",
+      "source_node_id": 144,
+      "destination_node_id": 145,
+      "label": ""
+    },
+    {
+      "id": 178,
+      "type": "Child",
+      "source_node_id": 141,
+      "destination_node_id": 144,
+      "label": ""
+    },
+    {
+      "id": 179,
+      "type": "Argument",
+      "source_node_id": 146,
+      "destination_node_id": 147,
+      "label": ""
+    },
+    {
+      "id": 180,
+      "type": "Child",
+      "source_node_id": 141,
+      "destination_node_id": 146,
+      "label": ""
+    },
+    {
+      "id": 181,
+      "type": "Argument",
+      "source_node_id": 149,
+      "destination_node_id": 150,
+      "label": ""
+    },
+    {
+      "id": 182,
+      "type": "Child",
+      "source_node_id": 148,
+      "destination_node_id": 149,
+      "label": ""
+    },
+    {
+      "id": 183,
+      "type": "Child",
+      "source_node_id": 148,
+      "destination_node_id": 5,
+      "label": ""
+    },
+    {
+      "id": 184,
+      "type": "Argument",
+      "source_node_id": 151,
+      "destination_node_id": 152,
+      "label": ""
+    },
+    {
+      "id": 185,
+      "type": "Child",
+      "source_node_id": 148,
+      "destination_node_id": 151,
+      "label": ""
+    },
+    {
+      "id": 186,
+      "type": "Argument",
+      "source_node_id": 153,
+      "destination_node_id": 154,
+      "label": ""
+    },
+    {
+      "id": 187,
+      "type": "Child",
+      "source_node_id": 148,
+      "destination_node_id": 153,
+      "label": ""
+    },
+    {
+      "id": 188,
+      "type": "Argument",
+      "source_node_id": 156,
+      "destination_node_id": 157,
+      "label": ""
+    },
+    {
+      "id": 189,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 156,
+      "label": ""
+    },
+    {
+      "id": 190,
+      "type": "Argument",
+      "source_node_id": 158,
+      "destination_node_id": 159,
+      "label": ""
+    },
+    {
+      "id": 191,
+      "type": "Child",
+      "source_node_id": 160,
+      "destination_node_id": 161,
+      "label": ""
+    },
+    {
+      "id": 192,
+      "type": "Argument",
+      "source_node_id": 158,
+      "destination_node_id": 160,
+      "label": ""
+    },
+    {
+      "id": 193,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 158,
+      "label": ""
+    },
+    {
+      "id": 194,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 161,
+      "label": ""
+    },
+    {
+      "id": 195,
+      "type": "Argument",
+      "source_node_id": 162,
+      "destination_node_id": 163,
+      "label": ""
+    },
+    {
+      "id": 196,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 162,
+      "label": ""
+    },
+    {
+      "id": 197,
+      "type": "Child",
+      "source_node_id": 164,
+      "destination_node_id": 135,
+      "label": ""
+    },
+    {
+      "id": 198,
+      "type": "Child",
+      "source_node_id": 164,
+      "destination_node_id": 3,
+      "label": ""
+    },
+    {
+      "id": 199,
+      "type": "Child",
+      "source_node_id": 164,
+      "destination_node_id": 137,
+      "label": ""
+    },
+    {
+      "id": 200,
+      "type": "Child",
+      "source_node_id": 164,
+      "destination_node_id": 138,
+      "label": ""
+    },
+    {
+      "id": 201,
+      "type": "Child",
+      "source_node_id": 164,
+      "destination_node_id": 140,
+      "label": ""
+    },
+    {
+      "id": 202,
+      "type": "Argument",
+      "source_node_id": 164,
+      "destination_node_id": 165,
+      "label": ""
+    },
+    {
+      "id": 203,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 164,
+      "label": ""
+    },
+    {
+      "id": 204,
+      "type": "Child",
+      "source_node_id": 166,
+      "destination_node_id": 46,
+      "label": ""
+    },
+    {
+      "id": 205,
+      "type": "Child",
+      "source_node_id": 166,
+      "destination_node_id": 2,
+      "label": ""
+    },
+    {
+      "id": 206,
+      "type": "Child",
+      "source_node_id": 166,
+      "destination_node_id": 48,
+      "label": ""
+    },
+    {
+      "id": 207,
+      "type": "Child",
+      "source_node_id": 166,
+      "destination_node_id": 50,
+      "label": ""
+    },
+    {
+      "id": 208,
+      "type": "Argument",
+      "source_node_id": 166,
+      "destination_node_id": 167,
+      "label": ""
+    },
+    {
+      "id": 209,
+      "type": "Child",
+      "source_node_id": 168,
+      "destination_node_id": 169,
+      "label": ""
+    },
+    {
+      "id": 210,
+      "type": "Argument",
+      "source_node_id": 170,
+      "destination_node_id": 171,
+      "label": ""
+    },
+    {
+      "id": 211,
+      "type": "Argument",
+      "source_node_id": 170,
+      "destination_node_id": 172,
+      "label": ""
+    },
+    {
+      "id": 212,
+      "type": "Child",
+      "source_node_id": 168,
+      "destination_node_id": 170,
+      "label": ""
+    },
+    {
+      "id": 213,
+      "type": "Child",
+      "source_node_id": 168,
+      "destination_node_id": 173,
+      "label": ""
+    },
+    {
+      "id": 214,
+      "type": "Argument",
+      "source_node_id": 166,
+      "destination_node_id": 168,
+      "label": ""
+    },
+    {
+      "id": 215,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 166,
+      "label": ""
+    },
+    {
+      "id": 216,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 169,
+      "label": ""
+    },
+    {
+      "id": 217,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 170,
+      "label": ""
+    },
+    {
+      "id": 218,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 173,
+      "label": ""
+    },
+    {
+      "id": 219,
+      "type": "Argument",
+      "source_node_id": 175,
+      "destination_node_id": 176,
+      "label": ""
+    },
+    {
+      "id": 220,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 175,
+      "label": ""
+    },
+    {
+      "id": 221,
+      "type": "Argument",
+      "source_node_id": 177,
+      "destination_node_id": 178,
+      "label": ""
+    },
+    {
+      "id": 222,
+      "type": "Child",
+      "source_node_id": 155,
+      "destination_node_id": 177,
+      "label": ""
+    },
+    {
+      "id": 223,
+      "type": "Argument",
+      "source_node_id": 180,
+      "destination_node_id": 181,
+      "label": ""
+    },
+    {
+      "id": 224,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 180,
+      "label": ""
+    },
+    {
+      "id": 225,
+      "type": "Argument",
+      "source_node_id": 182,
+      "destination_node_id": 183,
+      "label": ""
+    },
+    {
+      "id": 226,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 182,
+      "label": ""
+    },
+    {
+      "id": 227,
+      "type": "Argument",
+      "source_node_id": 184,
+      "destination_node_id": 185,
+      "label": ""
+    },
+    {
+      "id": 228,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 184,
+      "label": ""
+    },
+    {
+      "id": 229,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 6,
+      "label": ""
+    },
+    {
+      "id": 230,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 186,
+      "label": ""
+    },
+    {
+      "id": 231,
+      "type": "Argument",
+      "source_node_id": 188,
+      "destination_node_id": 189,
+      "label": ""
+    },
+    {
+      "id": 232,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 188,
+      "label": ""
+    },
+    {
+      "id": 233,
+      "type": "Argument",
+      "source_node_id": 190,
+      "destination_node_id": 191,
+      "label": ""
+    },
+    {
+      "id": 234,
+      "type": "Child",
+      "source_node_id": 179,
+      "destination_node_id": 190,
+      "label": ""
+    },
+    {
+      "id": 235,
+      "type": "Argument",
+      "source_node_id": 193,
+      "destination_node_id": 194,
+      "label": ""
+    },
+    {
+      "id": 236,
+      "type": "Argument",
+      "source_node_id": 193,
+      "destination_node_id": 195,
+      "label": ""
+    },
+    {
+      "id": 237,
+      "type": "Argument",
+      "source_node_id": 193,
+      "destination_node_id": 196,
+      "label": ""
+    },
+    {
+      "id": 238,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 193,
+      "label": ""
+    },
+    {
+      "id": 239,
+      "type": "Argument",
+      "source_node_id": 197,
+      "destination_node_id": 198,
+      "label": ""
+    },
+    {
+      "id": 240,
+      "type": "Argument",
+      "source_node_id": 197,
+      "destination_node_id": 199,
+      "label": ""
+    },
+    {
+      "id": 241,
+      "type": "Argument",
+      "source_node_id": 197,
+      "destination_node_id": 200,
+      "label": ""
+    },
+    {
+      "id": 242,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 197,
+      "label": ""
+    },
+    {
+      "id": 243,
+      "type": "Argument",
+      "source_node_id": 201,
+      "destination_node_id": 202,
+      "label": ""
+    },
+    {
+      "id": 244,
+      "type": "Argument",
+      "source_node_id": 201,
+      "destination_node_id": 203,
+      "label": ""
+    },
+    {
+      "id": 245,
+      "type": "Argument",
+      "source_node_id": 201,
+      "destination_node_id": 204,
+      "label": ""
+    },
+    {
+      "id": 246,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 201,
+      "label": ""
+    },
+    {
+      "id": 247,
+      "type": "Argument",
+      "source_node_id": 205,
+      "destination_node_id": 206,
+      "label": ""
+    },
+    {
+      "id": 248,
+      "type": "Argument",
+      "source_node_id": 205,
+      "destination_node_id": 207,
+      "label": ""
+    },
+    {
+      "id": 249,
+      "type": "Argument",
+      "source_node_id": 205,
+      "destination_node_id": 208,
+      "label": ""
+    },
+    {
+      "id": 250,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 205,
+      "label": ""
+    },
+    {
+      "id": 251,
+      "type": "Argument",
+      "source_node_id": 209,
+      "destination_node_id": 210,
+      "label": ""
+    },
+    {
+      "id": 252,
+      "type": "Argument",
+      "source_node_id": 209,
+      "destination_node_id": 211,
+      "label": ""
+    },
+    {
+      "id": 253,
+      "type": "Argument",
+      "source_node_id": 209,
+      "destination_node_id": 212,
+      "label": ""
+    },
+    {
+      "id": 254,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 209,
+      "label": ""
+    },
+    {
+      "id": 255,
+      "type": "Argument",
+      "source_node_id": 213,
+      "destination_node_id": 214,
+      "label": ""
+    },
+    {
+      "id": 256,
+      "type": "Argument",
+      "source_node_id": 213,
+      "destination_node_id": 215,
+      "label": ""
+    },
+    {
+      "id": 257,
+      "type": "Argument",
+      "source_node_id": 213,
+      "destination_node_id": 216,
+      "label": ""
+    },
+    {
+      "id": 258,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 213,
+      "label": ""
+    },
+    {
+      "id": 259,
+      "type": "Argument",
+      "source_node_id": 217,
+      "destination_node_id": 218,
+      "label": ""
+    },
+    {
+      "id": 260,
+      "type": "Argument",
+      "source_node_id": 217,
+      "destination_node_id": 219,
+      "label": ""
+    },
+    {
+      "id": 261,
+      "type": "Argument",
+      "source_node_id": 217,
+      "destination_node_id": 220,
+      "label": ""
+    },
+    {
+      "id": 262,
+      "type": "Call",
+      "source_node_id": 192,
+      "destination_node_id": 217,
+      "label": ""
+    }
+  ]
+}
