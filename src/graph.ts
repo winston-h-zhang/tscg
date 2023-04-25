@@ -117,6 +117,8 @@ export class CodeFlowGraph {
    */
   NEXT_EDGE_ID: number;
 
+  cwd?: string;
+
   constructor() {
     this.project = new Project();
     this.nodes = new Map();
@@ -129,6 +131,11 @@ export class CodeFlowGraph {
 
   addSourceFilesAtPaths(fileGlobs: string | readonly string[]) {
     this.project.addSourceFilesAtPaths(fileGlobs);
+
+  }
+
+  setCWD(cwd: string) {
+    this.cwd = cwd;
   }
 
   /**
@@ -402,7 +409,7 @@ export class CodeFlowGraph {
       } else if (nodeInfo.type === NodeType.Any) {
         nodeData = {};
       }
-      const nodePath = path.relative('/home/hantingz/lavalab/learn2/', nodeInfo.node.getSourceFile().getFilePath());
+      const nodePath = path.relative(this.cwd ?? "/", nodeInfo.node.getSourceFile().getFilePath());
       const node = {
         "id": nodeInfo.id,
         "class": nodeTypeToString(nodeInfo.type),
